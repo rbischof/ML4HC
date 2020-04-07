@@ -1,5 +1,5 @@
 from tensorflow.keras import models
-from tensorflow.keras.layers import Dense, Input, Dropout, Convolution1D, MaxPool1D, CuDNNGRU, BatchNormalization, Bidirectional
+from tensorflow.keras.layers import Dense, Input, Dropout, Convolution1D, MaxPool1D, GRU, BatchNormalization, Bidirectional
 		
 class CRNN:
     def __init__(self, name, output_dim, loss, last_activation, dense_size, hidden_size):
@@ -23,7 +23,7 @@ class CRNN:
         layer = MaxPool1D(pool_size=2)(layer)
         layer = Dropout(rate=0.1)(layer)
         layer = BatchNormalization()(layer)
-        gru = Bidirectional(CuDNNGRU(self.hidden_size, name='rnn'), merge_mode='concat')(layer)
+        gru = Bidirectional(GRU(self.hidden_size, name='rnn'), merge_mode='concat')(layer)
         layer = Dense(self.dense_size, activation='relu', name='dense')(gru)
         y = Dense(self.output_dim, name='out_layer', activation=self.last_activation)(layer)
 
